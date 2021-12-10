@@ -160,4 +160,84 @@ providers = {
 }
 ```
 
-1:38:08
+# Splitting a main.tf into several files
+Every `.tf` is used. You only can have on terraform and one provider block. It is common to make a `main.tf`, a `Outputs.tf` and a `variables.tf`. 
+
+# Delete infrastructure
+Use `terraform destroy`.
+
+# Working with several workspaces
+
+Use `terraform workspace list` to list all. A workspace is your environment.
+Your workspace is defined in your terraform block
+
+```
+terraform {
+  backend "local" {
+    organization = "example_corp"
+
+    workspaces {
+      name = "my-app-prod"
+    }
+  }
+}
+```
+
+Tutorial to use terraform cloud: https://www.terraform.io/docs/cloud/migrate/index.html
+
+Create your own organization and a new workspace. You can use the defined workflows via version control, or CLI-driven or API-driven.
+Authenticate with `terraform login`. The variables are local and so, you must set it in the workspace of the remote server via the browser.
+You must also set the ENV variables which are required for the authentication to the provider in "Environment Variables".
+
+# Provisioners
+
+Provisioners can be used to model specific actions on the local machine or on a remote machine in order to prepare servers or other infrastructure objects for service.
+
+# Local-Exec
+Allows you to run local exec commands on your local machine.
+
+https://www.terraform.io/docs/language/resources/provisioners/local-exec.html
+
+You can set environment variables via
+
+```
+resource "aws_instance" "web" {
+  # ...
+
+  provisioner "local-exec" {
+    command = "echo $FOO $BAR $BAZ >> env_vars.txt"
+
+    environment = {
+      FOO = "bar"
+      BAR = 1
+      BAZ = "true"
+    }
+  }
+}
+```
+
+# Remote-exec
+Allows you to execute commands on the target resource after a resource  is provisioned. It is unseful for provisioning a VM with a simple set of commands.
+
+https://www.terraform.io/docs/language/resources/provisioners/remote-exec.html
+
+You can use the field scripts to copy local scripts to the target resource and execute it there.
+
+#File provisioners
+Are used to copy files or directories from our local machine to the newly created resource.
+
+https://www.terraform.io/docs/language/resources/provisioners/file.html
+
+It may require a connection block within the provisioner for authentication.
+
+# Connection provisioner
+
+Most provisioners require access to the remote resource via SSH or WinRM, and expect a nested connection block with details about how to connect.
+
+https://www.terraform.io/docs/language/resources/provisioners/connection.html
+
+# Null Resources
+
+A null_resource is a placeholder for resources that have no specific association to a provider resources. You can provide a connection and triggers to a resource. Triggers is a map of values which should cause this set of provisioners to re-run. Values are meant to be interpolated references to variables or attributes of other resources.
+
+2:47:10
