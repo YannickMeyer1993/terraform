@@ -240,4 +240,13 @@ https://www.terraform.io/docs/language/resources/provisioners/connection.html
 
 A null_resource is a placeholder for resources that have no specific association to a provider resources. You can provide a connection and triggers to a resource. Triggers is a map of values which should cause this set of provisioners to re-run. Values are meant to be interpolated references to variables or attributes of other resources.
 
-2:47:10
+# Cheat Sheet:
+
+```https://www.techbeatly.com/terraform-cheat-sheet/```
+
+# Get a list of current providers (with modules)
+
+```terraform providers```
+
+
+3:36:58
