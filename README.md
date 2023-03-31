@@ -98,8 +98,11 @@ terraform {
 
 provider "google" {
   # Configuration options
+  credentials = "google_key_from_sa.json"
 }
 ```
+
+Also possible to link a json key of a service account under "google"."credentials". This file must be present in the directory of the terraform directory.
 # How to save credentials accordingly
 
 Over gcloud init + gcloud auth???
