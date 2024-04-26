@@ -131,7 +131,7 @@ Use ``terraform init`` to initialize the directory (you must be in the correct o
 ``terraform fmt`` corrects to format of the files.
 ``terraform validate`` tells if all files have the required attributes (not the correct content).
 ``terraform plan`` generates a plan of what it would deploy. if we are happy, then ``terraform apply``. Then ``yes``.
-``terraform refresh`` refreshes the state file.
+``terraform refresh`` refreshes the state file. Use the flag ``-auto-approve`` to skip the confirmation.
 # Input variables
 
 https://www.terraform.io/docs/language/values/variables.html
@@ -251,5 +251,141 @@ A null_resource is a placeholder for resources that have no specific association
 
 ```terraform providers```
 
+# The terraform language
 
-3:36:58
+This is the syntax
+
+```
+<BLOCK TYPE> "<BLOCK LABEL>" "<BLOCK LABEL>" { 
+  # Block body
+  <IDENTIFIER> = <EXPRESSION> # Argument
+}
+```
+
+Terraform language consists of blocks, expressions, and statements.
+
+- Blocks are containers for other content and usually represent a resource or data source.
+- Expressions are used to refer to or compute values. 
+- Arguments are used to set the value of a parameter in a block.
+
+# terraform configuration block
+
+This is the first block in a terraform configuration file. It is used to configure the behavior of the terraform command-line interface and to define the required providers.
+
+Example:
+```
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = ">= 3.0"
+    }
+  },
+  experiments = [module_variable_optional_attrs]
+  provider_meta "my-provider" {
+    hello = "world"
+  }
+}
+```
+
+# HashiCorp Configuration Language (HCL)
+
+HashiCorp Configuration Language is the language used to write terraform configuration files. It is designed to be easy to read and write and is used to define the structure of terraform configuration files.
+
+
+# Input Variables
+Input variables are used to parameterize terraform configurations. They allow you to define values that can be passed into a module or configuration at runtime.
+
+Example:
+```
+variable "region" {
+  description = "The AWS region to deploy resources in."
+  type = string
+  default = "us-west-2"
+}
+```
+
+Example for a nested type:
+```
+variable "tags" {
+  type = map(string)
+  default = {
+    Name = "my-instance"
+    Environment = "dev"
+  }
+}
+
+variable "docker_ports" {
+  type = list(object({
+    internal = number
+    external = number
+    protocol = string
+  }))
+  default = [
+    {
+      internal = 8300
+      external = 8300
+      protocol = "tcp"
+    }
+  ]
+}
+```
+
+Example for a Validation block:
+```
+variable "region" {
+  type = string
+  validation {
+    condition = length(var.region) > 0
+    error_message = "Region must not be empty."
+  }
+}
+```
+
+# Variable Definition files
+
+Files are named `*.tfvars`. They are used to define values for input variables.
+
+Example:
+```
+region = "us-west-2"
+var = [
+  "value1", "value2"
+]
+```
+It used the terraform language syntax.
+
+# Variables via Environment Variables
+Variables can be set via environment variables. The variable name must be prefixed with `TF_VAR_`.
+
+Example:
+In the Linux Shell:
+```
+export TF_VAR_region=us-west-2
+```
+How to access? Use `var.region`.
+
+# Loading Input Variables from Files
+
+Default autoloaded files are `terraform.tfvars`, `terraform.tfvars.json`, and `*.auto.tfvars`
+Not autoloaded files can be loaded via the `-var-file` flag.
+
+Example for such a command:
+```
+terraform apply -var-file="testing.tfvars"
+```
+Inline variables can be set via the `-var` flag.
+Example:
+```
+terraform apply -var="region=us-west-2"
+```
+Environment variables can also be used via TF_VAR_*.
+
+Order of precedence:
+1. Environment variables
+2. `terraform.tfvars` files
+3. `terraform.tfvars.json` files
+4. `*.auto.tfvars` and `*.auto.tfvars.json` files
+5. -var and -var-file flags
+
+3:53:42
