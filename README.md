@@ -388,4 +388,101 @@ Order of precedence:
 4. `*.auto.tfvars` and `*.auto.tfvars.json` files
 5. -var and -var-file flags
 
-3:53:42
+# Output Variables
+Output values are computed values after a terraform apply is performed.
+
+- They can be used to expose information about the resources that were created.
+- They can be used to obtain information after resource provisioning.
+- output a file of values for programmatic use.
+- cross-reference stacks via outputs in a state file via terraform_remote_state.
+
+Example:
+```
+output "db_passqword" {
+  value = aws_db_instance.mydb.password
+  sensitive = true
+  description = "The password for the database."
+}
+```
+Sensitive outputs will still be visible within the statefile.
+
+To print the output, use `terraform output`. To print a specific output, use `terraform output {output_name}`.
+Use the `-json` flag to get the output in JSON format.
+
+# Local Values
+Local values are used to define intermediate values that can be used in multiple places within a module or configuration.
+
+Example:
+```
+locals {
+  region = "us-west-2"
+  tags = {
+    Name = "my-instance"
+    Environment = "dev"
+  }
+}
+
+locals {
+  computed = concat(local.region, aws_instance.my_instance.id)
+}
+```
+Access local values via `local.{local_name}`. Locals help to avoid code duplication and make the code more readable. It is best practice to use locals sparingly since Terraform is declarative and the overuse can make it difficult to determine what the code is doing.
+
+# Data Sources
+Data sources are used to fetch information from external sources and use it within a terraform configuration.
+
+What is a data block?
+- A data block is used to define a data source.
+
+Example:
+```
+data "aws_ami" "example" {
+  most_recent = true
+  owners = ["self"]
+  filter {
+    name = "name"
+    values = ["my-ami-*"]
+  }
+}
+```
+Access the data via `data.{data_source_name}.{attribute}`. You use filters to narrow down the data source.
+Now, you can use the data source in a resource block. In this example, it is the most recent Amazon Machine Image (AMI) that is available.
+Example
+```
+resource "aws_instance" "web" {
+  ami = data.aws_ami.example.id
+  instance_type = "t2.micro"
+}
+```
+
+# References to Named Values (overview)
+Named Values are built-in expressions that can be used to reference values in a configuration:
+Resources : {resource_type}.{resource_name}.{attribute}
+Data Sources : {data_source_type}.{data_source_name}.{attribute}
+Modules : {module_name}.{output_name}
+Local Values : local.{local_name}
+Input Variables : var.{variable_name}
+Output Variables : output.{output_name}
+
+Filesystem and workspace info
+path.module : The path to the module where the expression is evaluated.
+path.root : The root directory of the configuration.
+path.cwd : The current working directory where the terraform command is run.
+terraform.workspace : The name of the workspace where the configuration is applied.
+Block-local values
+count.index : The index of the current resource or module instance.
+each.key : The key of the current element in a map.
+each.value : The value of the current element in a map.
+self.{attribute} : The value of an attribute in the current resource or module block.
+
+Named values resemble the attribute notation for map(object) values but are not objects and do not act as objects. You cannot use square brackets to access Named Values like an object.
+
+# Types of input variables
+Example
+```
+variable "region" {
+  type = string
+  default = "us-west-2"
+}
+
+4:11:54
