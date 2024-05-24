@@ -71,7 +71,7 @@ approach to apply change and resolving conflicts brought about by change. It is 
 
 # Visualize an execution plan
 
-``terraform graph | dot -Tsvg > grah.svg``
+``terraform graph | dot -Tsvg > graph.svg``
 
 For this, install GraphViz. This is called the dependency graph. terraform walks this graph to generate plans, refresh state, and more.
 
@@ -84,7 +84,7 @@ https://registry.terraform.io/browse/providers
 
 into your ``main.tf`` file.
 
-Also on https://registry.terraform.io/providers/hashicorp/google/latest/docs, you cann finde the documentation for many resources.
+Also on https://registry.terraform.io/providers/hashicorp/google/latest/docs, you can find the documentation for many resources.
 
 ```
 terraform {
@@ -484,5 +484,6 @@ variable "region" {
   type = string
   default = "us-west-2"
 }
+```
 
 4:11:54
