@@ -486,8 +486,6 @@ variable "region" {
 }
 ```
 
-4:11:54
-
 # terraform outputs
 # Possible ways of defining (sub-/child-)modules
 # data sources
@@ -501,7 +499,7 @@ Creates multiple instances of a resource. Can be referenced via `count.index`.
 ## for_each:
 Creates multiple instances of a resource. Can be referenced via `each.key` and `each.value`.
 ## provider
-Defines the provider for a resource. Can be used to define multiple providers for a resource.
+Defines the provider for a resource. Would it solve provider constraint problems?
 
 
 ## Lifecycle:
@@ -525,4 +523,4 @@ resource "aws_instance" "web" {
 ## provisioner
 ## connection
 
-4:56:20
+5:04:44
