@@ -487,3 +487,42 @@ variable "region" {
 ```
 
 4:11:54
+
+# terraform outputs
+# Possible ways of defining (sub-/child-)modules
+# data sources
+data sources are used to fetch information from external sources and use it within a terraform configuration.
+
+# Resource Meta arguments
+## depends_on:
+Defines the order of resource creation if terraform is not able.
+## count:
+Creates multiple instances of a resource. Can be referenced via `count.index`.
+## for_each:
+Creates multiple instances of a resource. Can be referenced via `each.key` and `each.value`.
+## provider
+Defines the provider for a resource. Can be used to define multiple providers for a resource.
+
+
+## Lifecycle:
+Customizes the behavior of a resource during terraform operations. It allows to change what happens to a resource during create/update/destroy.
+
+Example:
+```
+resource "aws_instance" "web" {
+  # ...
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+```
+
+- create_before_destroy: Creates a new resource before destroying the old one.
+- prevent_destroy: Prevents a resource from being destroyed.
+- ignore_changes: Ignores changes to specific attributes.
+
+## provisioner
+## connection
+
+4:40:48
