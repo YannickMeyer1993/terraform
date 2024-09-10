@@ -517,10 +517,50 @@ resource "aws_instance" "web" {
 ```
 
 - create_before_destroy: Creates a new resource before destroying the old one.
-- prevent_destroy: Prevents a resource from being destroyed.
+- prevent_destroy: Prevents a resource from being destroyed, even when "terraform destroy" is executed.
 - ignore_changes: Ignores changes to specific attributes.
 
 ## provisioner
 ## connection
 
-5:04:44
+## null types
+null represents absence or omission. Use it when you want to use the underlying default of a provider's resource configuration option.
+
+## Dynamic Blocks
+Example
+```
+resource "aws_instance" "web" {
+  instance_type = "t2.micro"
+
+  dynamic "ebs_block_device" {
+    for_each = var.ebs_block_devices
+    content {
+      device_name = ebs_block_device.value.device_name
+      volume_size = ebs_block_device.value.volume_size
+    }
+  }
+}
+
+variable "ebs_block_devices" {
+  type = list(object({
+    device_name = string
+    volume_size = number
+  }))
+}
+```
+
+# Terraform version constraints
+The following operators are valid:
+
+- = (or no operator): Allows only one exact version number. Cannot be combined with other conditions.
+- !=: Excludes an exact version number.
+- one of: >, >=, <, <=: Comparisons against a specified version, allowing versions for which the comparison is true. "Greater-than" requests newer versions, and "less-than" requests older versions.
+- ~>: Allows only the rightmost version component to increment. This format is referred to as the pessimistic constraint operator. For example, to allow new patch releases within a specific minor release, use the full version number:
+
+Example for a version constraint:
+```
+~> 1.0.4: Allows Terraform to install 1.0.5 and 1.0.10 but not 1.1.0.
+~> 1.1: Allows Terraform to install 1.2 and 1.10 but not 2.0.
+```
+6:01:28
+
