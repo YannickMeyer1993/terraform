@@ -1,6 +1,6 @@
 # terraform
 
-https://www.youtube.com/watch?v=V4waklkBC38
+https://www.youtube.com/watch?v=SPcwo0Gq9T8
 
 - IAC Tool
 - declarative
@@ -562,5 +562,33 @@ Example for a version constraint:
 ~> 1.0.4: Allows Terraform to install 1.0.5 and 1.0.10 but not 1.1.0.
 ~> 1.1: Allows Terraform to install 1.2 and 1.10 but not 2.0.
 ```
-6:01:28
 
+# Terraform State
+
+What is State? A state is a snapshot of the infrastructure that Terraform manages. It is stored in a state file.
+The state file is used to map real-world resources to your configuration, keep track of metadata, and improve performance for large infrastructures.
+The file name is terraform.tfstate.
+
+commands:
+
+- terraform state list: Lists all resources in the state file.
+- terraform state mv: Moves an item in the state file.
+- terraform state pull: Pulls the state and outputs it to stdout.
+- terraform state push: Pushes the state to the remote backend.
+- terraform state replace-provider: Replaces provider in the state file.
+- terraform state rm: Removes items from the state file.
+- terraform state show: Shows the attributes of a resource in the state file.
+
+# terraform state mv
+Moves an item in the state file. This command can be used to move resources between modules or to rename resources. Example:
+```
+terraform state mv module.foo.aws_instance.bar module.baz.aws_instance.qux
+terraform state mv module.foo.aws_instance.qux module.foo.bar.aws_instance.qux
+```
+
+# terraform apply -refresh-only
+This command is used to update the state file with the latest real-world infrastructure. It does not apply any changes to the infrastructure.
+
+When VM is deleted in the cloud, the state file still has the VM. This command is used to update the state file with the latest real-world infrastructure. It does not apply any changes to the infrastructure, especially it does not provision the VM again.
+
+4:00:33
