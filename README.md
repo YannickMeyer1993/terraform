@@ -591,4 +591,4 @@ This command is used to update the state file with the latest real-world infrast
 
 When VM is deleted in the cloud, the state file still has the VM. This command is used to update the state file with the latest real-world infrastructure. It does not apply any changes to the infrastructure, especially it does not provision the VM again.
 
-4:00:33
+4:51:00
